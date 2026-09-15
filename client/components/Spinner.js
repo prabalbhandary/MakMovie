@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Spinner() {
+export default function Spinner() {
   return (
-    <div>Spinner</div>
-  )
+    <>
+      <div className="loader">{/* <h2>M</h2> */}</div>
+    </>
+  );
 }
-
-export default Spinner
