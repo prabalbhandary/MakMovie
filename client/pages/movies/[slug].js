@@ -192,6 +192,21 @@ export default function moviesPost() {
                       <p>{alldata && alldata[0]?.description}</p>
                     </div>
                   </article>
+                  {alldata && alldata[0]?.screenshots?.length ? (
+                    <div className="moviescreenshots">
+                      <h3 className="uppercase">Screenshots:</h3>
+                      <div className="moviescreenshots__grid">
+                        {alldata[0].screenshots.map((shot, i) => (
+                          <img
+                            key={i}
+                            src={shot}
+                            alt={`${alldata[0].title} screenshot ${i + 1}`}
+                            loading="lazy"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
                   <section className="downloadsec">
                     <h2>G-Drive [GBToT] Downlads Link</h2>
                     <div className="downloadlinks">
@@ -235,21 +250,6 @@ export default function moviesPost() {
                     allowFullScreen
                   ></iframe>
                 </div>
-                {alldata && alldata[0]?.screenshots?.length ? (
-                  <div className="moviescreenshots">
-                    <h3 className="uppercase">Screenshots:</h3>
-                    <div className="moviescreenshots__grid">
-                      {alldata[0].screenshots.map((shot, i) => (
-                        <img
-                          key={i}
-                          src={shot}
-                          alt={`${alldata[0].title} screenshot ${i + 1}`}
-                          loading="lazy"
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
               </div>
             </div>
             {loading ? (
