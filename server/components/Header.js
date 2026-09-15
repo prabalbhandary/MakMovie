@@ -21,10 +21,10 @@ function Header({ onSidebarToggle }) {
     setOpenSearch(false);
   };
   const filteredMovies =
-    searchQuery.trim === ""
+    searchQuery.trim() === ""
       ? publishedMovies
       : publishedMovies.filter((movie) =>
-          movie.title.toLoweCase().includes(searchQuery.toLowerCase()),
+          movie.title.toLowerCase().includes(searchQuery.toLowerCase()),
         );
   return (
     <>
