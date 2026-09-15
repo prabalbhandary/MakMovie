@@ -2,16 +2,14 @@ import React, { useState } from "react";
 import useFetchData from "../hooks/useFetchData";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { IoLanguage, IoNotificationsSharp } from "react-icons/io5";
 import { MdOutlineStickyNote2 } from "react-icons/md";
 import { PiWindowsLogoBold } from "react-icons/pi";
 import { VscThreeBars } from "react-icons/vsc";
 
-function Header() {
+function Header({ onSidebarToggle }) {
   const { data: session } = useSession();
   const { alldata, loading } = useFetchData("/api/getmovies");
-  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [openSearch, setOpenSearch] = useState(false);
   const publishedMovies = alldata.filter((ab) => ab.status === "publish");
@@ -34,7 +32,7 @@ function Header() {
         <div className="flex flex-sb">
           {session ? (
             <div className="headerbar">
-              <VscThreeBars onClick={() => router.push("/")} />
+              <VscThreeBars onClick={onSidebarToggle} />
             </div>
           ) : null}
           {session ? (

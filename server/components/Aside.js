@@ -1,37 +1,49 @@
-import React, {useState, useEffect} from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import {BiCameraMovie, BiSolidCameraMovie} from 'react-icons/bi'
-import {IoHomeSharp} from 'react-icons/io5'
-import {MdOutlinePlaylistAdd} from 'react-icons/md'
-import {RiDraftFill} from 'react-icons/ri'
-import {FaUser} from 'react-icons/fa'
-import {PiSignInBold} from 'react-icons/pi'
+import { BiCameraMovie, BiSolidCameraMovie } from 'react-icons/bi'
+import { IoHomeSharp } from 'react-icons/io5'
+import { MdOutlinePlaylistAdd } from 'react-icons/md'
+import { RiDraftFill } from 'react-icons/ri'
+import { FaUser, FaTimes } from 'react-icons/fa'
+import { PiSignInBold } from 'react-icons/pi'
 
-function Aside() {
+function Aside({ open, onClose }) {
   const router = useRouter()
-  const [clicked, setClicked] = useState(false)
-  const [activeLink, setActiveLink] = useState('/')
-  const handleClick = () => {
-    setClicked(!clicked)
-  }
-  const handleLinkClick = (link) => {
-    setActiveLink(link)
-    setClicked(false)
-  }
+
   useEffect(() => {
-    setActiveLink(router.pathname)
-  }, [router.pathname])
+    const handler = (e) => {
+      if (e.key === 'Escape' && open) onClose()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [open, onClose])
+
+  const isActive = (path) => router.pathname === path
+
   return (
-    <div className='aside'>
-      <div className='logo flex'>
-        <BiCameraMovie />
-        <Link href='/'>
-          <h1>MakMovie</h1>
-        </Link>
+    <div className={`aside ${open ? 'aside--open' : ''}`}>
+      <div className="aside__top">
+        <div className="logo flex">
+          <BiCameraMovie />
+          <Link href="/">
+            <h1>MakMovie</h1>
+          </Link>
+        </div>
+        <button
+          className="aside__close"
+          onClick={onClose}
+          aria-label="Close sidebar"
+        >
+          <FaTimes />
+        </button>
       </div>
-      <ul className='mt-2'>
-        <Link href='/' className={activeLink === '/' ? 'active' : ''} onClick={() => handleLinkClick('/')}>
+      <ul className="mt-2">
+        <Link
+          href="/"
+          className={isActive('/') ? 'active' : ''}
+          onClick={onClose}
+        >
           <li>
             <div>
               <IoHomeSharp />
@@ -39,7 +51,11 @@ function Aside() {
             Dashboard
           </li>
         </Link>
-        <Link href='/movies' className={activeLink === '/movies' ? 'active' : ''} onClick={() => handleLinkClick('/movies')}>
+        <Link
+          href="/movies"
+          className={isActive('/movies') ? 'active' : ''}
+          onClick={onClose}
+        >
           <li>
             <div>
               <BiSolidCameraMovie />
@@ -47,7 +63,11 @@ function Aside() {
             Movies
           </li>
         </Link>
-        <Link href='/addmovie' className={activeLink === '/addmovie' ? 'active' : ''} onClick={() => handleLinkClick('/addmovie')}>
+        <Link
+          href="/addmovie"
+          className={isActive('/addmovie') ? 'active' : ''}
+          onClick={onClose}
+        >
           <li>
             <div>
               <MdOutlinePlaylistAdd />
@@ -55,7 +75,11 @@ function Aside() {
             Add Movie
           </li>
         </Link>
-        <Link href='/draft' className={activeLink === '/draft' ? 'active' : ''} onClick={() => handleLinkClick('/draft')}>
+        <Link
+          href="/draft"
+          className={isActive('/draft') ? 'active' : ''}
+          onClick={onClose}
+        >
           <li>
             <div>
               <RiDraftFill />
@@ -64,9 +88,13 @@ function Aside() {
           </li>
         </Link>
       </ul>
-      <h3 className='mt-2'>Account Pages</h3>
-      <ul className='mt-2'>
-        <Link href='/profile' className={activeLink === '/profile' ? 'active' : ''} onClick={() => handleLinkClick('/profile')}>
+      <h3 className="mt-2">Account Pages</h3>
+      <ul className="mt-2">
+        <Link
+          href="/profile"
+          className={isActive('/profile') ? 'active' : ''}
+          onClick={onClose}
+        >
           <li>
             <div>
               <FaUser />
@@ -74,7 +102,11 @@ function Aside() {
             Profile
           </li>
         </Link>
-        <Link href='/auth' className={activeLink === '/auth' ? 'active' : ''} onClick={() => handleLinkClick('/auth')}>
+        <Link
+          href="/auth"
+          className={isActive('/auth') ? 'active' : ''}
+          onClick={onClose}
+        >
           <li>
             <div>
               <PiSignInBold />
