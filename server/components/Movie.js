@@ -1,11 +1,17 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existingBgposter, smposter: existingSmposter, titlecategory: existingTitlecategory, description: existingDescription, rating: existingRating, duration: existingDuration, year: existingYear, genre: existingGenre, language: existingLanguage, subtitle: exsitingSubtitle, size: existingSize, quality: existingQuality, youtubelink: existingYoutubelink, category: existingCategory, watchonline: existingWatchonline, downloadlink: existingDownloadlink, status: existingStatus}) {
+function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existingBgposter, smposter: existingSmposter, titlecategory: existingTitlecategory, description: existingDescription, rating: existingRating, duration: existingDuration, year: existingYear, genre: existingGenre, language: existingLanguage, subtitle: exsitingSubtitle, size: existingSize, quality: existingQuality, youtubelink: existingYoutubelink, category: existingCategory, watchonline: existingWatchonline, streamlinks: existingStreamlinks, downloadlink: existingDownloadlink, status: existingStatus, subtitle: existingSubtitle}) {
   const [redirect, setRedirect] = useState(false);
   const router = useRouter();
+  const slugTouched = useRef(Boolean(existingSlug));
+  const slugify = (value) =>
+    value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   const [title, setTitle] = useState(existingTitle || "");
   const [slug, setSlug] = useState(existingSlug || "");
   const [bgposter, setBgposter] = useState(existingBgposter || "");
@@ -25,6 +31,9 @@ function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existin
   const [youtubelink, setYoutubelink] = useState(existingYoutubelink || "");
   const [category, setCategory] = useState(existingCategory || "");
   const [watchonline, setWatchonline] = useState(existingWatchonline || "");
+  const [streamlinks, setStreamlinks] = useState(
+    existingStreamlinks?.length ? existingStreamlinks : [{ label: "", url: "" }],
+  );
   const [downloadlink, setDownloadlink] = useState(
     existingDownloadlink || {
       "480p": "",
@@ -76,6 +85,25 @@ function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existin
     }));
   };
 
+  const handleStreamlinkChange = (index, field, value) => {
+    setStreamlinks((prevState) => {
+      const next = prevState.map((item, i) =>
+        i === index ? { ...item, [field]: value } : item,
+      );
+      return next;
+    });
+  };
+
+  const addStreamlink = () => {
+    setStreamlinks((prevState) => [...prevState, { label: "", url: "" }]);
+  };
+
+  const removeStreamlink = (index) => {
+    setStreamlinks((prevState) =>
+      prevState.filter((_, i) => i !== index),
+    );
+  };
+
   const toggleInputVisibility = (resolution) => {
     setShowInputs((prevstate) => ({
       ...prevstate,
@@ -84,9 +112,17 @@ function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existin
   };
 
   const handleSlugChange = (ev) => {
+    slugTouched.current = true;
     const inputValue = ev.target.value;
-    const newSlug = inputValue.replace(/\s+/g, "-");
-    setSlug(newSlug);
+    setSlug(slugify(inputValue));
+  };
+
+  const handleTitleChange = (ev) => {
+    const inputValue = ev.target.value;
+    setTitle(inputValue);
+    if (!slugTouched.current) {
+      setSlug(slugify(inputValue));
+    }
   };
 
   async function createMovie(ev) {
@@ -109,6 +145,7 @@ function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existin
       youtubelink,
       category,
       watchonline,
+      streamlinks,
       downloadlink,
       status,
     };
@@ -170,7 +207,7 @@ function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existin
                 id="title"
                 placeholder="Movie Title"
                 value={title}
-                onChange={(ev) => setTitle(ev.target.value)}
+                onChange={handleTitleChange}
               />
             </div>
             <div className="w-100 flex flex-col flex-left mb-2">
@@ -226,62 +263,77 @@ function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existin
               />
             </div>
             <div className="w-100 flex flex-col flex-left mb-2">
-              <label htmlFor="downloadlink">Movie Download Link</label>
-              <div className="flex gap-1">
-                <div
-                  className={
-                    showInputs["480p"] ? "dresolbtn active" : "dresolbtn"
-                  }
-                  onClick={() => toggleInputVisibility("480p")}
-                >
-                  {showInputs["480p"] ? "Hide 480p" : "Show 480p"}
+              <label>Movie Streaming Links</label>
+              <p className="streamlinkshint">
+                Add any number of stream links (G-Drive, Dropbox, direct MP4,
+                M3U8, etc.). Each needs a label + URL.
+              </p>
+              {streamlinks.map((link, index) => (
+                <div key={index} className="streamlinkrow w-100">
+                  <input
+                    type="text"
+                    placeholder="Label (e.g. 1080p, Server 1)"
+                    value={link.label || ""}
+                    onChange={(ev) =>
+                      handleStreamlinkChange(index, "label", ev.target.value)
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="Stream URL"
+                    value={link.url || ""}
+                    onChange={(ev) =>
+                      handleStreamlinkChange(index, "url", ev.target.value)
+                    }
+                  />
+                  <div
+                    className="dresolbtn"
+                    onClick={() => removeStreamlink(index)}
+                  >
+                    Remove
+                  </div>
                 </div>
-                <div
-                  className={
-                    showInputs["720p"] ? "dresolbtn active" : "dresolbtn"
-                  }
-                  onClick={() => toggleInputVisibility("720p")}
-                >
-                  {showInputs["720p"] ? "Hide 720p" : "Show 720p"}
-                </div>
-                <div
-                  className={
-                    showInputs["1080p"] ? "dresolbtn active" : "dresolbtn"
-                  }
-                  onClick={() => toggleInputVisibility("1080p")}
-                >
-                  {showInputs["1080p"] ? "Hide 1080p" : "Show 1080p"}
-                </div>
-                <div
-                  className={
-                    showInputs["4k"] ? "dresolbtn active" : "dresolbtn"
-                  }
-                  onClick={() => toggleInputVisibility("4k")}
-                >
-                  {showInputs["4k"] ? "Hide 4k" : "Show 4k"}
-                </div>
+              ))}
+              <div className="dresolbtn" onClick={addStreamlink}>
+                + Add Stream Link
               </div>
-              {resolutions ? (
-                <>
-                  {resolutions.map((resolution) => (
-                    <div key={resolution} className="w-100">
-                      {showInputs[resolution] && (
-                        <>
-                          <input
-                            type="text"
-                            id={`downloadlink${resolution}`}
-                            placeholder={`${resolution} Download Link`}
-                            value={downloadlink[resolution] || ""}
-                            onChange={(ev) =>
-                              handleInputChange(resolution, ev.target.value)
-                            }
-                          />
-                        </>
-                      )}
+            </div>
+            <div className="w-100 flex flex-col flex-left mb-2">
+              <label htmlFor="downloadlink">Movie Download Link</label>
+              <div className="downloadlinktoggles">
+                {resolutions.map((resolution) => (
+                  <div
+                    key={resolution}
+                    className={
+                      showInputs[resolution]
+                        ? "dlresoltoggle active"
+                        : "dlresoltoggle"
+                    }
+                    onClick={() => toggleInputVisibility(resolution)}
+                  >
+                    {resolution}
+                    {showInputs[resolution] ? " \u2212" : " +"}
+                  </div>
+                ))}
+              </div>
+              <div className="downloadlinkinputs">
+                {resolutions.map((resolution) =>
+                  showInputs[resolution] ? (
+                    <div key={resolution} className="downloadlinkrow">
+                      <span className="dlresollabel">{resolution}</span>
+                      <input
+                        type="text"
+                        id={`downloadlink${resolution}`}
+                        placeholder={`${resolution} G-Drive / Direct Link`}
+                        value={downloadlink[resolution] || ""}
+                        onChange={(ev) =>
+                          handleInputChange(resolution, ev.target.value)
+                        }
+                      />
                     </div>
-                  ))}
-                </>
-              ) : null}
+                  ) : null,
+                )}
+              </div>
             </div>
             <div className="w-100 flex flex-col flex-left mb-2">
               <label htmlFor="status">Movie Status:</label>

@@ -24,6 +24,7 @@ export default async function handle(req, res) {
       category,
       watchonline,
       downloadlink,
+      streamlinks,
       status,
     } = req.body;
     const movieData = await Movie.create({
@@ -45,6 +46,7 @@ export default async function handle(req, res) {
       category,
       watchonline,
       downloadlink,
+      streamlinks,
       status,
     });
     res.json(movieData);
@@ -77,6 +79,7 @@ export default async function handle(req, res) {
       category,
       watchonline,
       downloadlink,
+      streamlinks,
       status,
     } = req.body;
     await Movie.updateOne(
@@ -100,6 +103,7 @@ export default async function handle(req, res) {
         category,
         watchonline,
         downloadlink,
+        streamlinks,
         status,
       }
     );

@@ -95,12 +95,9 @@ export default function moviesPost() {
                         Dislike
                       </button>
                     </div>
-                    <a
-                      href={`${alldata && alldata[0]?.watchonline}`}
-                      target="_blank"
-                    >
+                    <Link href={`/watch/${alldata && alldata[0]?.slug}`}>
                       <button className="watchmoviebtn">Watch Now</button>
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 <div className="rating">

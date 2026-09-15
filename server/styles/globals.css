@@ -1452,3 +1452,81 @@ button {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.streamlinkshint {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+.streamlinkrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.streamlinkrow input {
+  flex: 1;
+  min-width: 160px;
+}
+
+.streamlinkrow .dresolbtn {
+  margin-right: 0;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.downloadlinktoggles {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.dlresoltoggle {
+  background-color: #e4e4e4;
+  padding: 7px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+.dlresoltoggle:hover {
+  background-color: #cfcfcf;
+}
+
+.dlresoltoggle.active {
+  background-color: #076fe5;
+  color: #fff;
+}
+
+.downloadlinkinputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.downloadlinkrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dlresollabel {
+  min-width: 56px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.downloadlinkrow input {
+  flex: 1;
+  min-width: 200px;
+}

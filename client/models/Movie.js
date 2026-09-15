@@ -54,6 +54,14 @@ const MovieSchema = new Schema({
     watchonline: {
         type: String
     },
+    streamlinks: [{
+        label: {
+            type: String
+        },
+        url: {
+            type: String
+        }
+    }],
     downloadlink: {
         "480p": {
             type: String
