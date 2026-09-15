@@ -1717,6 +1717,32 @@ nav.sticky .mobile svg {
   border-radius: 10px;
 }
 
+.moviescreenshots {
+  width: 100%;
+  margin-top: 40px;
+}
+
+.moviescreenshots h3 {
+  font-size: 25px;
+  font-weight: 700;
+  margin: 20px 0;
+  color: #6a7c8fca;
+}
+
+.moviescreenshots__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.moviescreenshots__grid img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
 /* card scroll */
 .raletedmovies {
   position: relative;

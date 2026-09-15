@@ -1524,6 +1524,39 @@ button {
   white-space: nowrap;
 }
 
+.screenshotrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.screenshotrow input {
+  flex: 1;
+  min-width: 160px;
+}
+
+.screenshotrow__preview {
+  width: 90px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.screenshotrow .dresolbtn {
+  margin-right: 0;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.dresolbtn--remove:hover,
+.dresolbtn--remove.active {
+  background-color: #e53935;
+}
+
 .downloadlinktoggles {
   display: flex;
   align-items: center;

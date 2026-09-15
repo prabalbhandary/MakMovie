@@ -62,6 +62,9 @@ const MovieSchema = new Schema({
             type: String
         }
     }],
+    screenshots: [{
+        type: String
+    }],
     downloadlink: {
         "480p": {
             type: String

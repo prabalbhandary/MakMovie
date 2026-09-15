@@ -235,6 +235,21 @@ export default function moviesPost() {
                     allowFullScreen
                   ></iframe>
                 </div>
+                {alldata && alldata[0]?.screenshots?.length ? (
+                  <div className="moviescreenshots">
+                    <h3 className="uppercase">Screenshots:</h3>
+                    <div className="moviescreenshots__grid">
+                      {alldata[0].screenshots.map((shot, i) => (
+                        <img
+                          key={i}
+                          src={shot}
+                          alt={`${alldata[0].title} screenshot ${i + 1}`}
+                          loading="lazy"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </div>
             {loading ? (

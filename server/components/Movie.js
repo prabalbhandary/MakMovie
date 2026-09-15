@@ -3,7 +3,7 @@ import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existingBgposter, smposter: existingSmposter, titlecategory: existingTitlecategory, description: existingDescription, rating: existingRating, duration: existingDuration, year: existingYear, genre: existingGenre, language: existingLanguage, subtitle: exsitingSubtitle, size: existingSize, quality: existingQuality, youtubelink: existingYoutubelink, category: existingCategory, watchonline: existingWatchonline, streamlinks: existingStreamlinks, downloadlink: existingDownloadlink, status: existingStatus, subtitle: existingSubtitle}) {
+function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existingBgposter, smposter: existingSmposter, titlecategory: existingTitlecategory, description: existingDescription, rating: existingRating, duration: existingDuration, year: existingYear, genre: existingGenre, language: existingLanguage, subtitle: exsitingSubtitle, size: existingSize, quality: existingQuality, youtubelink: existingYoutubelink, category: existingCategory, watchonline: existingWatchonline, streamlinks: existingStreamlinks, screenshots: existingScreenshots, downloadlink: existingDownloadlink, status: existingStatus, subtitle: existingSubtitle}) {
   const [redirect, setRedirect] = useState(false);
   const router = useRouter();
   const slugTouched = useRef(Boolean(existingSlug));
@@ -33,6 +33,9 @@ function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existin
   const [watchonline, setWatchonline] = useState(existingWatchonline || "");
   const [streamlinks, setStreamlinks] = useState(
     existingStreamlinks?.length ? existingStreamlinks : [{ label: "", url: "" }],
+  );
+  const [screenshots, setScreenshots] = useState(
+    existingScreenshots?.length ? existingScreenshots : [""],
   );
   const [downloadlink, setDownloadlink] = useState(
     existingDownloadlink || {
@@ -104,6 +107,22 @@ function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existin
     );
   };
 
+  const handleScreenshotChange = (index, value) => {
+    setScreenshots((prevState) =>
+      prevState.map((item, i) => (i === index ? value : item)),
+    );
+  };
+
+  const addScreenshot = () => {
+    setScreenshots((prevState) => [...prevState, ""]);
+  };
+
+  const removeScreenshot = (index) => {
+    setScreenshots((prevState) =>
+      prevState.filter((_, i) => i !== index),
+    );
+  };
+
   const toggleInputVisibility = (resolution) => {
     setShowInputs((prevstate) => ({
       ...prevstate,
@@ -146,6 +165,7 @@ function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existin
       category,
       watchonline,
       streamlinks,
+      screenshots,
       downloadlink,
       status,
     };
@@ -296,6 +316,42 @@ function Movie({_id, title: existingTitle, slug: existingSlug, bgposter: existin
               ))}
               <div className="dresolbtn" onClick={addStreamlink}>
                 + Add Stream Link
+              </div>
+            </div>
+            <div className="w-100 flex flex-col flex-left mb-2">
+              <label>Movie Screenshots / Sample Images</label>
+              <p className="streamlinkshint">
+                Add image URL links (screenshots, stills, sample images) shown
+                in a gallery on the movie page.
+              </p>
+              {screenshots.map((screenshot, index) => (
+                <div key={index} className="screenshotrow w-100">
+                  <input
+                    type="text"
+                    placeholder="Screenshot Image URL"
+                    value={screenshot || ""}
+                    onChange={(ev) =>
+                      handleScreenshotChange(index, ev.target.value)
+                    }
+                  />
+                  {screenshot ? (
+                    <img
+                      src={screenshot}
+                      alt={`Screenshot ${index + 1}`}
+                      className="screenshotrow__preview"
+                      onError={(ev) => (ev.target.style.display = "none")}
+                    />
+                  ) : null}
+                  <div
+                    className="dresolbtn dresolbtn--remove"
+                    onClick={() => removeScreenshot(index)}
+                  >
+                    Remove
+                  </div>
+                </div>
+              ))}
+              <div className="dresolbtn" onClick={addScreenshot}>
+                + Add Screenshot
               </div>
             </div>
             <div className="w-100 flex flex-col flex-left mb-2">
